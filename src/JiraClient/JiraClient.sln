@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraClient", "JiraClient\JiraClient.csproj", "{5C9EF090-765B-4CDB-B768-E95F8933A386}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A} = {DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraClient.Web", "JiraClient.Web\JiraClient.Web.csproj", "{DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraDashboardModule", "..\JiraDashboardModule\JiraDashboardModule.csproj", "{EC68B53A-F98B-4DD3-8A91-9E2CB585E43E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraClientInfrastructure", "..\JiraClientInfrastructure\JiraClientInfrastructure.csproj", "{DD2971A5-D8E9-43FC-A1F4-B4F46ACEE9B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C9EF090-765B-4CDB-B768-E95F8933A386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9EF090-765B-4CDB-B768-E95F8933A386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9EF090-765B-4CDB-B768-E95F8933A386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9EF090-765B-4CDB-B768-E95F8933A386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8FBA4F-F8C2-4E72-B7E9-FF50067CFC2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC68B53A-F98B-4DD3-8A91-9E2CB585E43E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC68B53A-F98B-4DD3-8A91-9E2CB585E43E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC68B53A-F98B-4DD3-8A91-9E2CB585E43E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC68B53A-F98B-4DD3-8A91-9E2CB585E43E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD2971A5-D8E9-43FC-A1F4-B4F46ACEE9B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD2971A5-D8E9-43FC-A1F4-B4F46ACEE9B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD2971A5-D8E9-43FC-A1F4-B4F46ACEE9B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD2971A5-D8E9-43FC-A1F4-B4F46ACEE9B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+	EndGlobalSection
+EndGlobal

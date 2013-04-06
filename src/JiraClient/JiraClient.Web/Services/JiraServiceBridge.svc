@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="Zieschang.Net.Projects.SLJiraClient.Web.Services.JiraServiceBridge" CodeBehind="JiraServiceBridge.svc.cs" %>
