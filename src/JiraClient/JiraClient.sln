@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraClient", "JiraClient\JiraClient.csproj", "{5C9EF090-765B-4CDB-B768-E95F8933A386}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2594B901-388A-46DF-A01D-189EAEC7F259} = {2594B901-388A-46DF-A01D-189EAEC7F259}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraDashboardModule", "..\JiraDashboardModule\JiraDashboardModule.csproj", "{EC68B53A-F98B-4DD3-8A91-9E2CB585E43E}"
 EndProject

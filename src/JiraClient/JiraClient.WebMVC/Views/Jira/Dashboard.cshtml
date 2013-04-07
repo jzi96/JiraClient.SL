@@ -13,11 +13,11 @@
         Auto Refresh Rate: @Html.TextBox("txtRefreshRate", 5, new { @style = "width: 20px;", @required = "true", @maxLength = 2, @tooltip = "Values smaller than 4 will be ignored, no refresh!" })
         s
     </div>
-    <div>
+    <div style="float:left;width:50%;">
         <!-- Area 1-->
         <div id="UserFilter" class="LoadingConfiguration">
-            <span>User Filter</span>
-            @Html.TextBox("txtUserFilter", "janzi")
+            <h3>Assigned To User</h3>
+            @Html.TextBox("txtUserFilter", "janzi", new { @style = "width: 200px;", @required = "true" })
             @Html.TextBox("txtNumResults", 10, new { @style = "width: 20px;", @required = "true", @maxLength = 2 })
             <input type="button" title="refresh" value="Refresh" id="fetchUserFilter" />
             @*id="ExecutingRequstUserFilter"  *@
@@ -25,53 +25,123 @@
                 <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
             </div>
         </div>
-        <div id="UserFilterResult">
+        <div id="UserResult">
         </div>
     </div>
-    <div>
+    <div style="float:left;margin-left:5px;width:49%;">
         <!-- Recent changes-->
-
+        <div id="RecentChangesFilter" class="LoadingConfiguration">
+            <h3>Latest Changes</h3>
+@*            @Html.ActionLink("Test Recent", "RecentChanges", new { numResults = 15 })
+*@            <div class="LoadingIndicator">
+                <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
+            </div>
+        </div>
+        <div id="RecentChangesResult">
+        </div>
     </div>
+    <div style="clear:both;">
+        <!-- Recent changes-->
+        <div id="AllHighIncidentsFilter" class="LoadingConfiguration">
+            <h3>Active High Issues</h3>
+            <div class="LoadingIndicator">
+                <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
+            </div>
+        </div>
+        <div id="AllHighIncidentsResult">
+        </div>
+    </div>
+
 </div>
 @section scripts{
     <script src="../../Scripts/jQuery.tmpl.js" type="text/javascript"></script>
     <script type="text/javascript">
 <!--
-        url = "/Jira/UserOpenJiraIssues";
-        intervallId = -1;
         $(document).ready(function () {
             $("#Dashboard").fadeIn("slow");
-            $("input.#fetchUserFilter").click(FetchUserWithFilter);
+            $("input.#fetchUserFilter").click(function () {
+                FetchUserWithFilter(); 
+                FetchHigh();
+                FetchRecent();
+            });
+            //Load the default set
         });
-
-
-        // Used to filter on a specific user 
-        function FetchUserWithFilter() {
-            $("#UserFilter").fadeOut("fast");
-            $("#UserFilter .LoadingIndicator").fadeIn("fast");
-            window.clearInterval(intervallId);
-            var load = url.replace("{0}", $("#txtUserFilter").val()).replace("{1}", $("#txtNumResults").val());
-            $.getJSON(load, { username: $("#txtUserFilter").val(), numResults: $("#txtNumResults").val() }
+        function EnableLoading(id) {
+            //$("#" + id).fadeOut("fast");
+            $("#" + id + " .LoadingIndicator").fadeIn("fast");
+            var tmp = id.replace("Filter", "Result");
+            var $t = $("#" + tmp);
+            $t.fadeTo(10, 0.2);
+            window.clearInterval($("#" + id).attr("timerIntervall"));
+        }
+        function DisableLoading(id) {
+            var tmp = id.replace("Filter", "Result");
+            var $t = $("#" + tmp);
+            $t.fadeTo(10, 1);
+            //$t.fadeIn("fast");
+            $("#" + id + " .LoadingIndicator").css({
+                top: $t.offset().top,
+                left: $t.offset().left,
+                width: $t.outerWidth(),
+                height: $t.outerHeight()
+            }).fadeOut("fast");
+        }
+        function PrepareNextCycle(id, funcCall) {
+            var timeout = Number($("#txtRefreshRate").val()) * 1000;
+            if (timeout > 3000) {
+                userFilterIntervallId = window.setTimeout(funcCall, timeout);
+                $("#" + id).attr("timerIntervall", userFilterIntervallId);
+            }
+        }
+        function FetchData( url, filterArea, resultAreaId, callData, prepareResultContentFunction) {
+            //arguments.callee.caller
+            EnableLoading(filterArea);
+            var load = url;
+            $.getJSON(load, callData
                 , function (data) {
                     //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
-                    var page = $("<div/>").addClass("IssueList"); //page-display
-                    $("#tmplJiraIssue").tmpl(data.issues).appendTo($(page));
-                    $("#UserFilterResult").empty().append($(page)).show("slow");
+                    var page = prepareResultContentFunction(data);
+                    $("#" + resultAreaId).empty().append($(page)).show("slow");
                 }
             )
             .error(function () {
-                $("#UserFilterResult").empty();
+                $("#" + resultAreaId).empty();
             })
             .always(function () {
-                $("#UserFilter").fadeIn("fast");
-                $("#UserFilter .LoadingIndicator").fadeOut("fast");
+                DisableLoading(filterArea);
 
             });
+            PrepareNextCycle(filterArea, arguments.callee.caller);
+        }
+        function FetchHigh() {
+            var url = "/Jira/ListActiveHighIssues";
+            FetchData(url, "AllHighIncidentsFilter", "AllHighIncidentsResult", { numResults: $("#txtNumResults").val() }, function (data) {
+                //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
+                var page = $("<div/>").addClass("IssueList"); //page-display
+                $("#tmplJiraIssueUpdated").tmpl(data.issues).appendTo($(page));
+                return page;
+            });
+        }
+        function FetchRecent() {
+            var url = "/Jira/RecentChanges";
+            FetchData(url, "RecentChangesFilter", "RecentChangesResult", { numResults: $("#txtNumResults").val() + 2 }, function (data) {
+                //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
+                var page = $("<div/>").addClass("IssueList"); //page-display
+                $("#tmplJiraIssueUpdated").tmpl(data.issues).appendTo($(page));
+                return page;
+            });
+        }
 
-            var timeout = Number($("#txtRefreshRate").val()) * 1000;
-            if (timeout > 3000) {
-                intervallId = window.setTimeout(FetchUserWithFilter, timeout);
-            }
+        // Used to filter on a specific user 
+        function FetchUserWithFilter() {
+            var url = "/Jira/UserOpenJiraIssues";
+
+            FetchData(url, "UserFilter", "UserResult", { username: $("#txtUserFilter").val(), numResults: $("#txtNumResults").val() }, function (data) {
+                //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
+                var page = $("<div/>").addClass("IssueList"); //page-display
+                $("#tmplJiraIssue").tmpl(data.issues).appendTo($(page));
+                return page;
+            });
         }
         function FormatDate(jsonDate) {
             var value = new Date(jsonDate);
@@ -82,9 +152,17 @@
     </script>
     <script id="tmplJiraIssue" type="text/html">
     <ul class="${fields.priority.name}">
-        <li><a href="${self}"><input type="hidden" value="${id}"/> ${key}</a></li>
-        <li><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></li>
-        <li>${FormatDate(fields.created)}</li>
+        <li style="width: 80px;"><a href="${self}">${key}</a></li>
+        <li style="width: 18px;"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></li>
+        <li style="font-size:0.8em;">${FormatDate(fields.created)}</li>
+        <li>${fields.summary}</li>
+    </ul>
+    </script>
+    <script id="tmplJiraIssueUpdated" type="text/html">
+    <ul class="${fields.priority.name}">
+        <li style="width: 80px;"><a href="${self}">${key}</a></li>
+        <li style="width: 18px;"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></li>
+        <li style="font-size:0.8em;">${FormatDate(fields.updated)}</li>
         <li>${fields.summary}</li>
     </ul>
     </script>
