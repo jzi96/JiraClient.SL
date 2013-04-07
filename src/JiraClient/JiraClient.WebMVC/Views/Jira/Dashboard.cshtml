@@ -10,22 +10,27 @@
 *@
 <div id="Dashboard" style="display: none;">
     <div class="DashboardSettingsHeader">
-        Auto Refresh Rate: @Html.TextBox("txtRefreshRate", 10, new { @style = "width: 20px;", @required = "true", @maxLength = 2, @tooltip = "Values smaller than 4 will be ignored, no refresh!" })
+        Auto Refresh Rate: @Html.TextBox("txtRefreshRate", 5, new { @style = "width: 20px;", @required = "true", @maxLength = 2, @tooltip = "Values smaller than 4 will be ignored, no refresh!" })
         s
     </div>
     <div>
         <!-- Area 1-->
-        <div id="UserFilter">
+        <div id="UserFilter" class="LoadingConfiguration">
             <span>User Filter</span>
             @Html.TextBox("txtUserFilter", "janzi")
             @Html.TextBox("txtNumResults", 10, new { @style = "width: 20px;", @required = "true", @maxLength = 2 })
             <input type="button" title="refresh" value="Refresh" id="fetchUserFilter" />
+            @*id="ExecutingRequstUserFilter"  *@
+            <div class="LoadingIndicator">
+                <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
+            </div>
         </div>
         <div id="UserFilterResult">
         </div>
-        <div id="ExecutingRequstUserFilter" style="display: none;">
-            Loading ...
-        </div>
+    </div>
+    <div>
+        <!-- Recent changes-->
+
     </div>
 </div>
 @section scripts{
@@ -39,9 +44,11 @@
             $("input.#fetchUserFilter").click(FetchUserWithFilter);
         });
 
+
+        // Used to filter on a specific user 
         function FetchUserWithFilter() {
-            $("#UserFilter").fadeOut("slow");
-            $("#UserFilter").fadeIn("ExecutingRequstUserFilter");
+            $("#UserFilter").fadeOut("fast");
+            $("#UserFilter .LoadingIndicator").fadeIn("fast");
             window.clearInterval(intervallId);
             var load = url.replace("{0}", $("#txtUserFilter").val()).replace("{1}", $("#txtNumResults").val());
             $.getJSON(load, { username: $("#txtUserFilter").val(), numResults: $("#txtNumResults").val() }
@@ -56,8 +63,8 @@
                 $("#UserFilterResult").empty();
             })
             .always(function () {
-                $("#ExecutingRequstUserFilter").fadeOut("ExecutingRequstUserFilter");
-                $("#UserFilter").fadeIn("slow");
+                $("#UserFilter").fadeIn("fast");
+                $("#UserFilter .LoadingIndicator").fadeOut("fast");
 
             });
 

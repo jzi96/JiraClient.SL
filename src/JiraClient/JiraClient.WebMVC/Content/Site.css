@@ -782,3 +782,13 @@ tr.pager td {
         list-style: none;
         padding-left: 15px;
     }
+.LoadingConfiguration
+{
+    position:relative;
+}
+.LoadingIndicator
+{
+    display: none;
+    position: absolute;
+    top: -1em;    
+}
