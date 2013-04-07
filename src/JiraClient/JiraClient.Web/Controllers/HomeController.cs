@@ -27,9 +27,12 @@ namespace JiraClient.Web.Controllers
         public ActionResult About()
         {
 
-
             return View();
         }
 
+        public ActionResult RunSilverlightClient()
+        {
+            return Redirect("~/JiraClientTestPage.aspx");
+        }
     }
 }
