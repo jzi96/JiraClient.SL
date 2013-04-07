@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dashboard</h2>
+@*
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+*@
+<div id="Dashboard" style="display:none;" >
+<div>        
+    Auto Refresh Rate: @Html.TextBox("txtRefreshRate", 10, new { @style = "width: 20px;", @required = "true", @maxLength = 2 }) s
+</div>
+<div>
+<!-- Area 1-->
+    <div id="UserFilter">
+        <span>User Filter</span>
+        @Html.TextBox("txtUserFilter")
+        @Html.TextBox("txtNumResults", 10, new { @style="width: 20px;", @required="true", @maxLength=2})
+         <input type="button" title="refresh" value="Refresh" id="fetchUserFilter"/>
+     </div>
+     <div id="UserFilterResult">
+     </div>
+     <div id="ExecutingRequstUserFilter" style="display:none;">
+     Loading ...
+     </div>
+</div>
+</div>
+
+
+@section scripts{
+    <script src="../../Scripts/jQuery.tmpl.js" type="text/javascript"></script>
+<script type ="text/javascript">
+<!--
+    url = "/Jira/UserOpenJiraIssues";
+    intervallId = -1;
+    $(document).ready(function () {
+        $("#Dashboard").fadeIn("slow");
+        $("input.#fetchUserFilter").click(FetchUserWithFilter);
+    });
+
+    function FetchUserWithFilter() {
+        $("#UserFilter").fadeOut("slow");
+        $("#UserFilter").fadeIn("ExecutingRequstUserFilter");
+        $("#UserFilterResult").empty();
+        window.clearInterval(intervallId);
+        var load = url.replace("{0}", $("#txtUserFilter").val()).replace("{1}", $("#txtNumResults").val());
+        $.getJSON(load, { username: $("#txtUserFilter").val(), numResults: $("#txtNumResults").val() }
+                , function (data) {
+                    //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
+                    var page = $("<div/>").addClass("page-display");
+                    $("#tmplJiraIssue").tmpl(data.issues).appendTo($(page));
+                    $("#UserFilterResult").append($(page)).show("slow");
+                }
+            ).always(function () {
+                $("#ExecutingRequstUserFilter").fadeOut("ExecutingRequstUserFilter");
+                $("#UserFilter").fadeIn("slow");
+
+            });
+
+        var timeout = Number($("#txtRefreshRate").val())*1000;
+        if (timeout > 3000) {
+            intervallId = window.setTimeout(FetchUserWithFilter, timeout);
+        }
+    }
+//-->
+</script>
+
+
+<script id="tmplJiraIssue" type="text/html">
+    <ul class="incPrioMark${fields.priority.name}">
+        <li><input type="hidden" value="${id}"/> ${key}</li>
+        <li>${fields.summary}</li>
+        <li>${fields.priority.name}</li>
+    </ul>
+</script>
+}

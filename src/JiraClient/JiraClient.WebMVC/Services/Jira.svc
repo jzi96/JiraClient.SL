@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="JiraClient.WebMVC.Services.Jira" CodeBehind="Jira.svc.cs" %>
