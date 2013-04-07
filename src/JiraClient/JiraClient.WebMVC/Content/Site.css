@@ -754,3 +754,31 @@ tr.pager td {
             margin: 0;
         }
 }
+
+.DashboardSettingsHeader, .DashboardSettingsHeader *
+{
+    text-align:right;
+    font-size: small;
+}
+.IssueList ul
+{
+    margin: 1px;
+    padding: 2px;
+    padding: 10px;
+    background-color: #FFFFFF;
+}
+.IssueList ul.Major
+{
+    background-color: #FF9966;
+}
+.IssueList ul.Blocker
+{
+    background-color: #FF0000;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+.IssueList ul li {
+        display: inline;
+        list-style: none;
+        padding-left: 15px;
+    }
