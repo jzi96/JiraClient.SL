@@ -151,19 +151,19 @@
 //-->
     </script>
     <script id="tmplJiraIssue" type="text/html">
-    <ul class="${fields.priority.name}">
-        <li style="width: 80px;"><a href="${self}">${key}</a></li>
-        <li style="width: 18px;"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></li>
-        <li style="font-size:0.8em;">${FormatDate(fields.created)}</li>
-        <li>${fields.summary}</li>
-    </ul>
+    <div class="nolst ${fields.priority.name}">
+        <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
+        <div class="lfK"><a href="${self}">${key}</a></div>
+        <div class="lfD">${FormatDate(fields.created)}</div>
+        <div>${fields.summary}</div>
+    </div>
     </script>
     <script id="tmplJiraIssueUpdated" type="text/html">
-    <ul class="${fields.priority.name}">
-        <li style="width: 80px;"><a href="${self}">${key}</a></li>
-        <li style="width: 18px;"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></li>
-        <li style="font-size:0.8em;">${FormatDate(fields.updated)}</li>
-        <li>${fields.summary}</li>
-    </ul>
+    <div class="nolst ${fields.priority.name}">
+        <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
+        <div class="lfK"><a href="${self}">${key}</a></div>
+        <div class="lfD">${FormatDate(fields.updated)}</div>
+        <div>${fields.summary}</div>
+    </div>
     </script>
 }
