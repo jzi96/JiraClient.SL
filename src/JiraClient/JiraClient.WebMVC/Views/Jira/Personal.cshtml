@@ -13,7 +13,7 @@ TODO:@User.Identity.Name
 </div>
 <div id="MyIssueListResult"></div>
 </div>
-<div id="LoadingIndicator" style="position:absolute; height: 100%; min-height: 100%; width:100%; min-width:100%;display:none;text-align:center; vertical-align:middle;">
+<div id="LoadingIndicator" style="position:absolute; height: 100%; min-height: 100%; width:100%; min-width:100%;display:none;text-align:center;">
         <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
 </div>
 @section scripts{
@@ -51,12 +51,13 @@ TODO:@User.Identity.Name
         function FetchData(url, resultAreaId, callData, prepareResultContentFunction) {
             //arguments.callee.caller
             EnableLoading();
-            var load = url;
+            var load = url; 
             $.getJSON(load, callData
                 , function (data) {
                     //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
                     var page = prepareResultContentFunction(data);
                     $("#" + resultAreaId).empty().append($(page)).show("slow");
+                    RegisterForInlineEditing($(page).find("div.logItem"));
                 }
             )
             .error(function () {
@@ -75,6 +76,8 @@ TODO:@User.Identity.Name
         <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
         <div class="lfK"><a href="${self}">${key}</a></div>
         <div class="lfD">${FormatDate(fields.created)}</div>
+        <div class="lfW">&nbsp;${fields.timespent}</div>
+        <div class="lfW logItem">&nbsp;</div>
         <div>${fields.summary}</div>
     </div>
     </script>

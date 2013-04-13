@@ -765,7 +765,7 @@ tr.pager td {
 {
     width:100%;
     margin: 1px;
-    padding: 5px 2px 5px 2px;
+    padding: 3px 1px 3px 1px;
     background-color: #FFFFFF;
 }
 .IssueList > div.Major
@@ -778,9 +778,10 @@ tr.pager td {
     font-weight: bold;
     color: #FFFFFF;
 }
-.lfI, .lfK, .lfD
+.lfI, .lfK, .lfD, .lfW
 {
     float:left;
+    margin: 0 1px 0 1px;
 }
 .lfI
 {
@@ -794,6 +795,20 @@ tr.pager td {
 {
     width:120px;
     font-size:0.8em;
+}
+.lfW, div.logItem > input
+{
+    width:40px;
+}
+div.logItem
+{
+    border: 1px dashed;
+}
+div.logItem > input
+{
+    font-size:0.8em;
+    margin: 0;
+    padding: 0;
 }
 div#Dashboard > div 
 {
@@ -816,7 +831,7 @@ div#Dashboard > div
    cursor:text;   
 }
 
-.nolst 
+div.nolst 
 {
     list-style-type: none;
 }
