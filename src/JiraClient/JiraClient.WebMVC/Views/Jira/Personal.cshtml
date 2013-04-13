@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Personal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="Dashboard">
+<h2>Personal Dashboard</h2>
+<div>
+TODO:@User.Identity.Name
+    <div id="userDisplay">janzi</div>
+    <div>
+        <input type="button" id="cmdRefresh" value="Refresh view" />
+    </div>
+</div>
+<div id="MyIssueListResult"></div>
+</div>
+
+@section scripts{
+    <script src="../../Scripts/jQuery.tmpl.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    <!--
+        $(document).ready(function () {
+            $("#Dashboard").fadeIn("slow");
+            $("input.#cmdRefresh").click(function () {
+                FetchUserIssues();
+            });
+            //inline edit to change user name
+            $("#userDisplay").click(function () {
+                var userName = $(this).text();
+                var input = $("<input type='text' value='" + userName + "'/>");
+                $(this).empty().append($(input));
+                $(input).select();
+                $(input).focusout(function () {
+                    var userName = $(this).val();
+                    $(this).parent().empty().text(userName);
+                });
+                //register ...
+            });
+            $("#userDisplay").hover(function () {
+                $(this).addClass("hover");
+            }, function () {
+                $(this).removeClass("hover");
+            });
+            
+            //Load the default set
+        });
+        maxIssues = 40;
+        function FetchUserIssues() {
+            var url = "/Jira/UserOpenJiraIssues";
+            FetchData(url, "MyIssueListResult", { username: $("#userDisplay").text(), numResults: maxIssues }, function (data) {
+                var page = $("<div/>").addClass("IssueList"); //page-display
+                $("#tmplJiraIssue").tmpl(data.issues).appendTo($(page));
+                return page;
+            });
+        }
+
+        function EnableLoading() {
+        }
+        function DisableLoading(){
+        }
+        function FetchData(url, resultAreaId, callData, prepareResultContentFunction) {
+            //arguments.callee.caller
+            EnableLoading();
+            var load = url;
+            $.getJSON(load, callData
+                , function (data) {
+                    //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
+                    var page = prepareResultContentFunction(data);
+                    $("#" + resultAreaId).empty().append($(page)).show("slow");
+                }
+            )
+            .error(function () {
+                $("#" + resultAreaId).empty();
+            })
+            .always(function () {
+                DisableLoading();
+
+            });
+            }
+
+    //-->
+    </script>
+        <script id="tmplJiraIssue" type="text/html">
+    <div class="nolst ${fields.priority.name}">
+        <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
+        <div class="lfK"><a href="${self}">${key}</a></div>
+        <div class="lfD">${FormatDate(fields.created)}</div>
+        <div>${fields.summary}</div>
+    </div>
+    </script>
+
+}

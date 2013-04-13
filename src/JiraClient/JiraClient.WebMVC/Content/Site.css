@@ -760,26 +760,41 @@ tr.pager td {
     text-align:right;
     font-size: small;
 }
-.IssueList > ul
+
+.IssueList > div
 {
+    width:100%;
     margin: 1px;
     padding: 5px 2px 5px 2px;
     background-color: #FFFFFF;
 }
-.IssueList > ul.Major
+.IssueList > div.Major
 {
     background-color: #FF9966;
 }
-.IssueList > ul.Blocker
+.IssueList > div.Blocker
 {
     background-color: #FF0000;
     font-weight: bold;
     color: #FFFFFF;
 }
-.IssueList > ul > li {
-        display: inline;
-        list-style: none;
-    }
+.lfI, .lfK, .lfD
+{
+    float:left;
+}
+.lfI
+{
+    width: 18px;
+}
+.lfK
+{
+    width: 80px;
+}
+.lfD
+{
+    width:120px;
+    font-size:0.8em;
+}
 div#Dashboard > div 
 {
     border-style: none;
@@ -794,4 +809,14 @@ div#Dashboard > div
     position: absolute;
     text-align: center;
     vertical-align: middle;
+}
+
+.hover
+{
+   cursor:text;   
+}
+
+.nolst 
+{
+    list-style-type: none;
 }

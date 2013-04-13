@@ -255,6 +255,7 @@
     <None Include="readme.txt" />
     <Content Include="Views\Home\SilverLight.cshtml" />
     <Content Include="Views\Jira\Dashboard.cshtml" />
+    <Content Include="Views\Jira\Personal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

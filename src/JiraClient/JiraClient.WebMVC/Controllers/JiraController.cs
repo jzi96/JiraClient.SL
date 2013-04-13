@@ -17,6 +17,10 @@ namespace JiraClient.WebMVC.Controllers
         {
             return View();
         }
+        public ActionResult Personal()
+        {
+            return View();
+        }
 
 
         public ActionResult UserOpenJiraIssues(string username, int numResults)
