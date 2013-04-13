@@ -4,44 +4,49 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services;
+using JiraClient.WebMVC.Models;
 
 namespace JiraClient.WebMVC.Controllers
 {
     public class JiraController : Controller
     {
+        private readonly Services.Jira _Jira = new Services.Jira();
+        readonly JiraPagePropertiesModel _model;
+        public JiraController()
+        {
+            _model = new JiraPagePropertiesModel();
+            _model.JiraUrl = _Jira.GetJiraUrl();
+        }
         public ActionResult Index()
         {
             return RedirectToActionPermanent("Dashboard");
         }
         public ActionResult Dashboard()
         {
-            return View();
+            return View(_model);
         }
         public ActionResult Personal()
         {
-            return View();
+            return View(_model);
         }
 
 
         public ActionResult UserOpenJiraIssues(string username, int numResults)
         {
-            Services.Jira jira = new Services.Jira();
-            return Json(jira.Search("status!='Closed' AND status!='Resolved' AND assignee='" + username + "' ORDER BY PRIORITY", 0, numResults), JsonRequestBehavior.AllowGet);
+            return Json(_Jira.Search("status!='Closed' AND status!='Resolved' AND assignee='" + username + "' ORDER BY PRIORITY, UPDATED DESC", 0, numResults), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult RecentChanges(string project, int numResults)
         {
-            Services.Jira jira = new Services.Jira();
             string projectFilter = GetProjectFilter(project);
-            return Json(jira.Search("ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
+            return Json(_Jira.Search("ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListActiveHighIssues(string project, int numResults)
         {
-            Services.Jira jira = new Services.Jira();
             string projectFilter = GetProjectFilter(project);
             if(!string.IsNullOrEmpty(projectFilter))
                 projectFilter +=" AND ";
-            return Json(jira.Search(projectFilter+ "status!='Closed' AND priority > 2 ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
+            return Json(_Jira.Search(projectFilter + "status!='Closed' AND priority > 2 ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
         }
 
         private static string GetProjectFilter(string project)

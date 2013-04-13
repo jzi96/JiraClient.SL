@@ -1,4 +1,5 @@
-﻿@{
+﻿@model JiraClient.WebMVC.Models.JiraPagePropertiesModel
+@{
     ViewBag.Title = "Personal";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -74,7 +75,7 @@ TODO:@User.Identity.Name
         <script id="tmplJiraIssue" type="text/html">
     <div class="nolst ${fields.priority.name}">
         <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
-        <div class="lfK"><a href="${self}">${key}</a></div>
+        <div class="lfK"><a href="@string.Concat(Model.JiraUrl, "/browse/${key}")">${key}</a></div>
         <div class="lfD">${FormatDate(fields.created)}</div>
         <div class="lfW">&nbsp;${fields.timespent}</div>
         <div class="lfW logItem">&nbsp;</div>

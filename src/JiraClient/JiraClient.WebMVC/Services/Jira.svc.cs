@@ -19,7 +19,10 @@ namespace JiraClient.WebMVC.Services
         [OperationContract]
         public string GetJiraUrl()
         {
-            return ConfigurationManager.AppSettings["JIRA"];
+            string url = ConfigurationManager.AppSettings["JIRA"];
+            if (url!= null && url.EndsWith("/"))
+                url = url.Remove(url.Length - 1);
+            return url;
         }
         [OperationContract]
         public Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services.SearchResult Search(string jql, int pos, int count)

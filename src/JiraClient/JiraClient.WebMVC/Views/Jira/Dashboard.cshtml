@@ -1,4 +1,5 @@
-﻿@{
+﻿@model JiraClient.WebMVC.Models.JiraPagePropertiesModel
+@{
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -148,7 +149,7 @@
     <script id="tmplJiraIssue" type="text/html">
     <div class="nolst ${fields.priority.name}">
         <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
-        <div class="lfK"><a href="${self}">${key}</a></div>
+        <div class="lfK"><a href="@string.Concat(Model.JiraUrl, "/browse/${key}")">${key}</a></div>
         <div class="lfD">${FormatDate(fields.created)}</div>
         <div>${fields.summary}</div>
     </div>
@@ -156,7 +157,7 @@
     <script id="tmplJiraIssueUpdated" type="text/html">
     <div class="nolst ${fields.priority.name}">
         <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
-        <div class="lfK"><a href="${self}">${key}</a></div>
+        <div class="lfK"><a href="@string.Concat(Model.JiraUrl, "/browse/${key}")">${key}</a></div>
         <div class="lfD">${FormatDate(fields.updated)}</div>
         <div>${fields.summary}</div>
     </div>
