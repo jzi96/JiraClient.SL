@@ -13,9 +13,12 @@ TODO:@User.Identity.Name
 </div>
 <div id="MyIssueListResult"></div>
 </div>
-
+<div id="LoadingIndicator" style="position:absolute; height: 100%; min-height: 100%; width:100%; min-width:100%;display:none;text-align:center; vertical-align:middle;">
+        <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
+</div>
 @section scripts{
     <script src="../../Scripts/jQuery.tmpl.js" type="text/javascript"></script>
+    <script src="../../Scripts/helper-code.js" type="text/javascript"></script>
     <script type="text/javascript">
     <!--
         $(document).ready(function () {
@@ -24,23 +27,7 @@ TODO:@User.Identity.Name
                 FetchUserIssues();
             });
             //inline edit to change user name
-            $("#userDisplay").click(function () {
-                var userName = $(this).text();
-                var input = $("<input type='text' value='" + userName + "'/>");
-                $(this).empty().append($(input));
-                $(input).select();
-                $(input).focusout(function () {
-                    var userName = $(this).val();
-                    $(this).parent().empty().text(userName);
-                });
-                //register ...
-            });
-            $("#userDisplay").hover(function () {
-                $(this).addClass("hover");
-            }, function () {
-                $(this).removeClass("hover");
-            });
-            
+            RegisterForInlineEditing("#userDisplay");
             //Load the default set
         });
         maxIssues = 40;
@@ -54,9 +41,13 @@ TODO:@User.Identity.Name
         }
 
         function EnableLoading() {
+            $(body).fadeTo(10, 0.2);
+            $("#LoadingIndicator").fadeTo(10, 1);
         }
         function DisableLoading(){
-        }
+            $("#LoadingIndicator").fadeOut("fast");
+            $(body).fadeTo(10, 1);
+          }
         function FetchData(url, resultAreaId, callData, prepareResultContentFunction) {
             //arguments.callee.caller
             EnableLoading();
