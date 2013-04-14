@@ -15,7 +15,7 @@ function RegisterForInlineEditingItem(ctrlAsElement, formatting, onEditFinish) {
             var newValue = $(this).val();
             //if empty add a space, otherwise the area may gone!
             if (!newValue)
-                newValue = "&nbsp;";
+                newValue = " ";
             var parentItem = $(this).parent();
             var oldValue = parentItem.data("oldValue");
             var onEditFinish = parentItem.data("onEditFinishFunction");
@@ -53,4 +53,34 @@ function PadLeft(value, num, padChar) {
         value = padChar + value;
     }
     return value;
+}
+var ConvertToMinuteFactor = 60;
+var ConvertToHourFactor = 60 * ConvertToMinuteFactor;
+var ConvertToDayFactor = 8 * ConvertToHourFactor;
+var ConvertToWeekFactor = 5 * ConvertToDayFactor;
+var FactorsHirachy = [ConvertToWeekFactor, ConvertToDayFactor, ConvertToHourFactor, ConvertToMinuteFactor, 1];
+var MarkersHirachy = ["w", "d", "h", "m", "s"];
+function TimespentFriendlyConverter(timeSpentInSec, pos) {
+
+    if (!pos)
+        pos = 0;
+    if (!timeSpentInSec)
+        return "";
+
+    var build = "";
+    var factor = FactorsHirachy[pos];
+    if (timeSpentInSec > factor) {
+        build = Math.floor(timeSpentInSec / factor) + MarkersHirachy[pos];
+        timeSpentInSec = timeSpentInSec % factor;
+    }
+    build = build + TimespentFriendlyConverter(timeSpentInSec, pos+1);
+    return build;
+}
+function HighlightChange(item, depth, onComplete) {
+    if (!depth) {
+        onComplete($(item));
+        return;
+    }
+    $(item).fadeToggle(300, "swing", function () { HighlightChange($(this), depth - 1, onComplete); });
+    return $(item);
 }

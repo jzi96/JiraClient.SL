@@ -4,18 +4,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div id="Dashboard">
-<h2>Personal Dashboard</h2>
-<div>
-TODO:@User.Identity.Name
-    <div id="userDisplay">janzi</div>
+    <h2>
+        Personal Dashboard</h2>
     <div>
-        <input type="button" id="cmdRefresh" value="Refresh view" />
+        TODO:@User.Identity.Name
+        <div id="userDisplay">
+            janzi</div>
+        <div>
+            <input type="button" id="cmdRefresh" value="Refresh view" />
+        </div>
+    </div>
+    <div id="MyIssueListResult">
     </div>
 </div>
-<div id="MyIssueListResult"></div>
-</div>
-<div id="LoadingIndicator" style="position:absolute; height: 100%; min-height: 100%; width:100%; min-width:100%;display:none;text-align:center;">
-        <img src="../../Images/ajax-loader.gif" alt="Loading"/> Loading ...
+<div id="LoadingIndicator" style="position: fixed; height: 100%; min-height: 100%;
+    width: 100%; min-width: 100%; display: none; text-align: center;">
+    <img src="../../Images/ajax-loader.gif" alt="Loading" />
+    Loading ...
 </div>
 @section scripts{
     <script src="../../Scripts/jQuery.tmpl.js" type="text/javascript"></script>
@@ -45,10 +50,10 @@ TODO:@User.Identity.Name
             $(body).fadeTo(10, 0.2);
             $("#LoadingIndicator").fadeTo(10, 1);
         }
-        function DisableLoading(){
+        function DisableLoading() {
             $("#LoadingIndicator").fadeOut("fast");
             $(body).fadeTo(10, 1);
-          }
+        }
         function FetchData(url, resultAreaId, callData, prepareResultContentFunction) {
             //arguments.callee.caller
             EnableLoading();
@@ -69,24 +74,25 @@ TODO:@User.Identity.Name
                 DisableLoading();
 
             });
-            }
-            function AfterEditWorkLog(item, newValue, oldValue) {
-                var url = "/Jira/UpdateWorklog";
-                $.getJSON(url, {issueId: $(item).parent().attr("tag"), timespent :newValue}, function () {
-                    alert("done"); 
-                });
-            }
+        }
+        function AfterEditWorkLog(item, newValue, oldValue) {
+            if (!newValue || newValue.search(/[0-9]+[wmhds]/i)<0)
+                return; //no value
+            var url = "/Jira/UpdateWorklog";
+            $.getJSON(url, { issueId: $(item).parent().attr("tag"), timespent: newValue }, function () {
+                HighlightChange(item, 6, function () { $(item).text(""); });
+            });
+        }
     //-->
     </script>
-        <script id="tmplJiraIssue" type="text/html">
+    <script id="tmplJiraIssue" type="text/html">
     <div class="nolst ${fields.priority.name}" tag="${key}">
         <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
         <div class="lfK"><a href="@string.Concat(Model.JiraUrl, "/browse/${key}")">${key}</a></div>
         <div class="lfD">${FormatDate(fields.created)}</div>
-        <div class="lfW">&nbsp;${fields.timespent}</div>
-        <div class="lfW logItem">&nbsp;</div>
+        <div class="lfW">${TimespentFriendlyConverter(fields.timespent)}</div>
+        <div class="lfW logItem"></div>
         <div>${fields.summary}</div>
     </div>
     </script>
-
 }

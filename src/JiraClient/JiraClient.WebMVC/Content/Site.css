@@ -778,9 +778,11 @@ tr.pager td {
     font-weight: bold;
     color: #FFFFFF;
 }
-.lfI, .lfK, .lfD, .lfW
+div.nolst > div
 {
-    float:left;
+    display: inline-block;
+    overflow:hidden;
+    empty-cells:show;
     margin: 0 1px 0 1px;
 }
 .lfI
@@ -793,12 +795,15 @@ tr.pager td {
 }
 .lfD
 {
-    width:120px;
+    width:90px;
     font-size:0.8em;
 }
+
 .lfW, div.logItem > input
 {
-    width:40px;
+    width:70px;
+    min-height:1em;
+    min-width:16px;
 }
 div.logItem
 {
@@ -829,9 +834,4 @@ div#Dashboard > div
 .hover
 {
    cursor:text;   
-}
-
-div.nolst 
-{
-    list-style-type: none;
 }
