@@ -164,3 +164,4 @@ pip-log.txt
 
 
 src/JiraClient/JiraClient/Generated_Code/
+*.svclog 
