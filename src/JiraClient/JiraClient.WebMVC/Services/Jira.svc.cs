@@ -37,9 +37,9 @@ namespace JiraClient.WebMVC.Services
             }
         }
         [OperationContract]
-        public string UpdateWorklog(string issueId, string timespent)
+        public object UpdateWorklog(string issueId, string timespent)
         {
-            string r = null;
+            object r = null;
             using (ManualResetEvent wait = new ManualResetEvent(false))
             {
                 JiraRestWrapperService svc = CreateJiraService();

@@ -35,7 +35,22 @@ function RegisterForInlineEditingItem(ctrlAsElement, formatting, onEditFinish) {
 
 
 function FormatDate(jsonDate) {
-    var value = new Date(jsonDate);
+    //workround
+
+    var value = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
     //alert(value.toISOString("HH:mm DD.MM.YYYY"));
-    return value.toLocaleString();  //value.getHours() + ":" + value.getMinutes() + " " + value.getDay() + "." + (value.getMonth()+1) + "." + value.getYear();
+    return PadLeftDT(value.getHours()) + ":" + PadLeftDT(value.getMinutes()) + " " + PadLeftDT(value.getDay()) + "." + PadLeftDT((value.getMonth())) + "." + value.getFullYear();
+}
+function PadLeftDT(value) {
+    return PadLeft(value, 2, '0');
+}
+function PadLeft(value, num, padChar) {
+    var lng = value.toString().length;
+    if (lng > num)
+        return value;
+    lng = num - lng;
+    for (i = 0; i < lng; i++) {
+        value = padChar + value;
+    }
+    return value;
 }

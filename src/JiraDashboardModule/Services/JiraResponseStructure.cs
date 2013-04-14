@@ -116,8 +116,8 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
         public object timespent { get; set; }
         public Reporter reporter { get; set; }
         public object aggregatetimeoriginalestimate { get; set; }
-        public string updated { get; set; }
-        public string created { get; set; }
+        public DateTime updated { get; set; }
+        public DateTime created { get; set; }
         public string description { get; set; }
         public Priority priority { get; set; }
         public object duedate { get; set; }

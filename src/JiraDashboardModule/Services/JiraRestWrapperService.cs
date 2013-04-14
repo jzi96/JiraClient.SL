@@ -11,6 +11,7 @@ using System.Net;
 
 #if(SILVERLIGHT)
 using System.Windows.Browser;
+using System.IO;
 #else
 using System.Web;
 #endif
@@ -26,20 +27,20 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
         private readonly NetworkCredential _credentials;
         private readonly string _url;
         public JiraRestWrapperService(string url)
-            :this(url, null)
+            : this(url, null)
         {
         }
         public JiraRestWrapperService(string url, NetworkCredential credentials)
         {
-            if(url.EndsWith("/"))
-                url=url.Remove(url.Length-1);
+            if (url.EndsWith("/"))
+                url = url.Remove(url.Length - 1);
             _url = url;
             _credentials = credentials;
         }
         public void BeginSearch(Action<SearchResult> result, string jql, int pos, int count)
         {
             const string searchUrlPattern = "/rest/api/2/search?jql={0}&startAt={1}&maxResults={2}";
-            string call = PrepareRequestUrl(searchUrlPattern, new string[]{jql, pos.ToString(), count.ToString()});
+            string call = PrepareRequestUrl(searchUrlPattern, new string[] { jql, pos.ToString(), count.ToString() });
 #if(SILVERLIGHT)
             bool httpResult = WebRequest.RegisterPrefix("http://", System.Net.Browser.WebRequestCreator.ClientHttp);
 #endif
@@ -54,16 +55,20 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
                         System.Text.Encoding.UTF8.GetBytes(
                             string.Format("{0}:{1}", _credentials.UserName, _credentials.Password))));
 #endif
-            var ar = request.BeginGetResponse(new AsyncCallback(ReceivingWebResponse), new object[]{request,result});
+            var ar = request.BeginGetResponse(new AsyncCallback(ReceivingWebResponse), new object[] { request, result });
         }
         private void ReceivingWebResponse(IAsyncResult ar)
         {
             var response = ((WebRequest)((object[])ar.AsyncState)[0]).EndGetResponse(ar);
-            var stream = response.GetResponseStream();
-            System.Runtime.Serialization.Json.DataContractJsonSerializer s = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(SearchResult));
-            var res = (SearchResult)s.ReadObject(stream);
-            var callback = (Action<SearchResult>)((object[])ar.AsyncState)[1];
-            callback(res);
+            using (var stream = response.GetResponseStream())
+            {
+                using (var sr = new System.IO.StreamReader(stream))
+                {
+                    var res = Newtonsoft.Json.JsonConvert.DeserializeObject<SearchResult>(sr.ReadToEnd());
+                    var callback = (Action<SearchResult>)((object[])ar.AsyncState)[1];
+                    callback(res);
+                }
+            }
         }
 
 
@@ -75,7 +80,7 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
         /// <param name="result"></param>
         /// <param name="issueid">Could be key or Id of the issue</param>
         /// <param name="timeSpentValue"></param>
-        public void UpdateWorkLog(Action<string> result, string issueid, string timeSpentValue)
+        public void UpdateWorkLog(Action<object> result, string issueid, string timeSpentValue)
         {
             const string searchUrlPattern = "/rest/api/2/issue/{0}/worklog";
             string[] urlArguments = new string[1];
@@ -95,10 +100,10 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
             var stream = response.GetResponseStream();
             //System.Runtime.Serialization.Json.DataContractJsonSerializer s = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(SearchResult));
             //var res = (SearchResult)s.ReadObject(stream);
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(stream))
+            using (var sr = new System.IO.StreamReader(stream))
             {
-                var res = sr.ReadToEnd();
-                var callback = (Action<string>)((object[])ar.AsyncState)[1];
+                var res = Newtonsoft.Json.JsonConvert.DeserializeObject(sr.ReadToEnd());
+                var callback = (Action<object>)((object[])ar.AsyncState)[1];
                 callback(res);
             }
         }
