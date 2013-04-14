@@ -28,11 +28,31 @@ namespace JiraClient.WebMVC.Services
         public Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services.SearchResult Search(string jql, int pos, int count)
         {
             SearchResult r = null;
-            ManualResetEvent wait = new ManualResetEvent(false);
+            using (ManualResetEvent wait = new ManualResetEvent(false))
+            {
+                JiraRestWrapperService svc = CreateJiraService();
+                svc.BeginSearch(result => { r = result; wait.Set(); }, jql, pos, count);
+                wait.WaitOne();
+                return r;
+            }
+        }
+        [OperationContract]
+        public string UpdateWorklog(string issueId, string timespent)
+        {
+            string r = null;
+            using (ManualResetEvent wait = new ManualResetEvent(false))
+            {
+                JiraRestWrapperService svc = CreateJiraService();
+                svc.UpdateWorkLog(result => { r = result; wait.Set(); }, issueId, timespent);
+                wait.WaitOne();
+                return r;
+            }
+        }
+
+        private JiraRestWrapperService CreateJiraService()
+        {
             JiraRestWrapperService svc = new JiraRestWrapperService(GetJiraUrl(), new System.Net.NetworkCredential(ConfigurationManager.AppSettings["JIRA_U"], ConfigurationManager.AppSettings["JIRA_P"]));
-            svc.BeginSearch(result => { r = result; wait.Set(); }, jql, pos, count);
-            wait.WaitOne();
-            return r;
+            return svc;
         }
     }
 }

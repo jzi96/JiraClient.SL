@@ -52,13 +52,14 @@ TODO:@User.Identity.Name
         function FetchData(url, resultAreaId, callData, prepareResultContentFunction) {
             //arguments.callee.caller
             EnableLoading();
-            var load = url; 
+            var load = url;
             $.getJSON(load, callData
                 , function (data) {
                     //tmpl plugin http://msdn.microsoft.com/en-us/magazine/gg715549.aspx
                     var page = prepareResultContentFunction(data);
                     $("#" + resultAreaId).empty().append($(page)).show("slow");
-                    RegisterForInlineEditing($(page).find("div.logItem"));
+                    var editItems = $(page).find("div.logItem");
+                    RegisterForInlineEditingItem(editItems, null, AfterEditWorkLog);
                 }
             )
             .error(function () {
@@ -69,11 +70,16 @@ TODO:@User.Identity.Name
 
             });
             }
-
+            function AfterEditWorkLog(item, newValue, oldValue) {
+                var url = "/Jira/UpdateWorklog";
+                $.getJSON(url, {issueId: $(item).parent().attr("tag"), timespent :newValue}, function () {
+                    alert("done"); 
+                });
+            }
     //-->
     </script>
         <script id="tmplJiraIssue" type="text/html">
-    <div class="nolst ${fields.priority.name}">
+    <div class="nolst ${fields.priority.name}" tag="${key}">
         <div class="lfI"><img src="${fields.issuetype.iconUrl}" alt="${fields.issuetype.name}" width="16px" height="16px"/></div>
         <div class="lfK"><a href="@string.Concat(Model.JiraUrl, "/browse/${key}")">${key}</a></div>
         <div class="lfD">${FormatDate(fields.created)}</div>

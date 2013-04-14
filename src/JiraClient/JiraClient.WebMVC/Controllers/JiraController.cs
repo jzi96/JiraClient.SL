@@ -33,22 +33,55 @@ namespace JiraClient.WebMVC.Controllers
 
         public ActionResult UserOpenJiraIssues(string username, int numResults)
         {
-            return Json(_Jira.Search("status!='Closed' AND status!='Resolved' AND assignee='" + username + "' ORDER BY PRIORITY, UPDATED DESC", 0, numResults), JsonRequestBehavior.AllowGet);
+            try
+            {
+                return Json(_Jira.Search("status!='Closed' AND status!='Resolved' AND assignee='" + username + "' ORDER BY PRIORITY, UPDATED DESC", 0, numResults), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
         }
 
         public ActionResult RecentChanges(string project, int numResults)
         {
-            string projectFilter = GetProjectFilter(project);
-            return Json(_Jira.Search("ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
+            try
+            {
+                string projectFilter = GetProjectFilter(project);
+                return Json(_Jira.Search("ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
         }
         public ActionResult ListActiveHighIssues(string project, int numResults)
         {
-            string projectFilter = GetProjectFilter(project);
-            if(!string.IsNullOrEmpty(projectFilter))
-                projectFilter +=" AND ";
-            return Json(_Jira.Search(projectFilter + "status!='Closed' AND priority > 2 ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
-        }
+            try
+            {
+                string projectFilter = GetProjectFilter(project);
+                if (!string.IsNullOrEmpty(projectFilter))
+                    projectFilter += " AND ";
+                return Json(_Jira.Search(projectFilter + "status!='Closed' AND priority > 2 ORDER BY UPDATED", 0, numResults), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
 
+                return Json(ex);
+            }
+        }
+        public ActionResult UpdateWorklog(string issueId, string timespent)
+        {
+            try
+            {
+                return Json(_Jira.UpdateWorklog(issueId,timespent), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex);
+            }
+        }
         private static string GetProjectFilter(string project)
         {
             string projectFilter = string.Empty;

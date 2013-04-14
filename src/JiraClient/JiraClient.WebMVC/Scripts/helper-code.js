@@ -1,17 +1,28 @@
 ﻿function RegisterForInlineEditing(ctrl) {
     RegisterForInlineEditingItem($(ctrl));
 }
-function RegisterForInlineEditingItem(ctrlAsElement, formatting) {
+function RegisterForInlineEditingItem(ctrlAsElement, formatting, onEditFinish) {
+    ctrlAsElement.data("onEditFinishFunction", onEditFinish);
     ctrlAsElement.click(function () {
         var userName = $(this).text();
         var input = $("<input type='text' value='" + userName + "'/>");
-        if(formatting != null)
+        if (formatting != null)
             $(input).addClass(formatting);
+        $(this).data("oldValue", userName);
         $(this).empty().append($(input));
         $(input).select();
         $(input).focusout(function () {
-            var userName = $(this).val();
-            $(this).parent().empty().text(userName);
+            var newValue = $(this).val();
+            //if empty add a space, otherwise the area may gone!
+            if (!newValue)
+                newValue = "&nbsp;";
+            var parentItem = $(this).parent();
+            var oldValue = parentItem.data("oldValue");
+            var onEditFinish = parentItem.data("onEditFinishFunction");
+            parentItem.html("").text(newValue);
+            parentItem.removeData("oldValue");
+            if (onEditFinish)
+                onEditFinish(parentItem, newValue, oldValue);
         });
         //register ...
     }).hover(function () {

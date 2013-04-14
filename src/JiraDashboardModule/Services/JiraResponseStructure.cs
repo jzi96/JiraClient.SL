@@ -138,6 +138,7 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
         public List<object> components { get; set; }
         public object timeoriginalestimate { get; set; }
         public object aggregatetimespent { get; set; }
+
     }
 
     public class Issue
@@ -156,5 +157,16 @@ namespace Zieschang.Net.Projects.SLJiraClient.DashboardModule.Services
         public int maxResults { get; set; }
         public int total { get; set; }
         public List<Issue> issues { get; set; }
+    }
+
+
+
+
+
+
+
+    public class WorkLogAdd
+    {
+        public string timeSpent { get; set; }
     }
 }
