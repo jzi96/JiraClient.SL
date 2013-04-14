@@ -35,6 +35,9 @@ namespace JiraClient.WebMVC.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(username))
+                    return Json(null);
+                username = username.Trim();
                 return Json(_Jira.Search("status!='Closed' AND status!='Resolved' AND assignee='" + username + "' ORDER BY PRIORITY, UPDATED DESC", 0, numResults), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -74,6 +77,8 @@ namespace JiraClient.WebMVC.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(timespent))
+                    return null ;
                 return Json(_Jira.UpdateWorklog(issueId,timespent), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
